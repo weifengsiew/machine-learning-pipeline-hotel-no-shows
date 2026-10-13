@@ -13,10 +13,13 @@ on:
       - "requirements.txt"
       - "run.sh"
       - "!**/README.md"
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  deploy:
+  validate:
     name: Publish Kedro-Viz and run pipeline
     runs-on: ubuntu-latest
     env:
@@ -25,10 +28,6 @@ jobs:
       MPLCONFIGDIR: /tmp/kedro-mplconfig
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
     steps:
       - name: Fetch repository
         uses: actions/checkout@v4
@@ -46,6 +45,25 @@ jobs:
 
       - name: Run project workflow
         run: ./run.sh
+
+  deploy:
+    name: Deploy Kedro-Viz to GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      KEDRO: kedro
+      KEDRO_DISABLE_TELEMETRY: "1"
+      MPLCONFIGDIR: /tmp/kedro-mplconfig
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Fetch repository
+        uses: actions/checkout@v4
 
       - name: Deploy Kedro-Viz to GitHub Pages
         uses: kedro-org/publish-kedro-viz@v3

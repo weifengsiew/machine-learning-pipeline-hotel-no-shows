@@ -10,33 +10,28 @@
 
 ## 1. Project Objective
 
-In this project, we leverage machine learning to accurately predict the probability that a hotel guest will show up for their booked stay ('0'), or if a no-show will occur ('1'). These probability estimates can support hotel operations management decisions, including staffing, inventory planning, booking reminders, deposit policies, and overbooking limits. By identifying bookings with a higher risk of no-show, the hotel can make more informed decisions that support business objectives such as reducing operational inefficiencies, improving resource allocation and protecting revenue.
+In this project, we leverage machine learning to accurately predict the probability that a hotel guest will show up for their booked stay ('0'), or if a no-show will occur ('1'). These probability estimates can support hotel operations management decisions, including staffing, inventory planning, deposit policies, and overbooking limits. By identifying bookings with a higher risk of no-show, the hotel can make more informed decisions that support business objectives such as reducing operational inefficiencies, improving resource allocation and protecting revenue.
 
 **Input:** Hotel booking information, including:
 
-- booking and stay calendar fields
+- booking and stay dates
 - branch, country, room, and booking platform
 - first-time guest status
 - adult and child counts
-- booking price and currency
+- booking price 
 
 **Output:** The probability that a booking will be a no-show.
 
 **Main metric:** Area under the receiver operating characteristic curve
 (AUROC).
 
-AUROC is used to compare candidate pipelines because the model produces
-no-show probabilities and must distinguish no-shows from shows across
-classification thresholds. Calibration is also evaluated because the
-probabilities support operational decisions.
+AUROC is used to compare sklearn candidate pipelines because it measures how no-show probabilities from models distinguish no-shows from shows across
+classification thresholds. Probabilistic calibration is also evaluated to ensure accurate probabilities, to correctly-inform operational decisions.
 
 ## Data
 
-We use the `noshow.db` SQLite dataset, which contains 119,391 hotel booking
-rows and 15 raw columns. The raw database is downloaded by `scripts/stage1.sh`
-from the configured source URL and stored at `data/raw/noshow.db`. The raw data
-is not committed to the repository.
-
+We use the `noshow.db dataset, which contains 119,391 hotel bookings
+(rows) and 15 booking features (columns). The raw database is downloaded by `scripts/stage1.sh` from the configured source URL and stored at `data/raw/noshow.db`. 
 ## Solution: machine learning pipeline
 
 <img src="notebooks/images/kedro%20pipeline.png" alt="Kedro pipeline visualisation" width="700">
@@ -86,18 +81,17 @@ For the full exploratory analysis, see [`eda.ipynb`](eda.ipynb).
 
 | Finding | Decision |
 |---|---|
-| `no_show` has one missing value among 119,391 rows. | Remove the missing target row with `drop_missing_target_rows` before modelling. |
+| `no_show` has one missing value among 119,391 rows. | Remove rows with missing target using `drop_missing_target_rows. |
 | `arrival_day`, `checkout_day`, and `num_children` are stored as floating-point values even though their observed non-missing values are integer-valued. | Cast the expected integer fields to nullable `Int64` types with `convert_numeric_column_types`. |
-| `num_adults` contains 11,402 word-form values such as `one` and `two`. | Convert the word forms to numeric strings with `num_adults_words_to_numbers` before integer conversion. |
-| The singleton missing values affect only one row per field, while `room` and `price` have substantially more missing values. | Drop rows with low missingness using `drop_rows_with_low_missingness`; retain the missing `room` and `price` values for handling in downstream preprocessing. |
+| `num_adults` contains 11,402 words such as `one` and `two`. | Convert the words to numeric strings with `num_adults_words_to_numbers` before conversion to integers. |
+| Singleton missing values affect only one row per field, while `room` and `price` have substantially more missing values. | Drop rows with low missingness using `drop_rows_with_low_missingness`; retain the missing `room` and `price` values for handling in downstream preprocessing. |
 | Month labels include inconsistent casing in `arrival_month`, such as `April` and `ApRiL`. | Standardise month labels with `standardize_month_columns`. |
-| `checkout_day` contains negative values, including a minimum of `-31`. | Set invalid day-of-month values to missing with `set_invalid_day_of_month_to_missing` before calendar and stay-length features are constructed. |
+| `checkout_day` contains negative values, including a minimum of `-31`. | Set invalid day-of-month values to missing with `set_invalid_day_of_month_to_missing` |
 | Every non-missing `price` value matches the specified `SGD$ amount` or `USD$ amount` pattern. | Parse the currency and numeric amount with `parse_price_currency_and_amount` in feature engineering. |
 
 The raw table contains no exact duplicate rows or duplicate `booking_id`
 values. The pipeline nevertheless runs `drop_duplicate_rows` as a defensive
-cleaning step; because no duplicates are present, the rows remain unchanged,
-and the validation suite also checks row and booking-identifier uniqueness.
+cleaning step; because no duplicates are present, the rows remain unchanged.
 
 #### Feature engineering
 
@@ -105,7 +99,7 @@ and the validation suite also checks row and booking-identifier uniqueness.
 |---|---|
 | Every non-missing price value contains either an SGD or USD currency label and a numeric amount. | Parse the currency and amount, then convert USD amounts to SGD. |
 | Arrival and checkout month/day fields can be combined into reference-year dates. | Create `stay_length_nights` from 2024 reference-year dates, with invalid or unavailable calendar inputs represented as missing. |
-| Booking and arrival months define a cyclic booking lead-time measure. | Create `booking_to_arrival_month_gap`. |
+| Booking and arrival months define a lead-time measure. | Create `booking_to_arrival_month_gap`. |
 | Adult and child counts define the booking party size. | Create `total_guests`. |
 | Total guests, stay length, and SGD price define price-intensity measures. | Create `price_per_guest`, `price_per_night`, and `price_per_guest_per_night`. |
 | The chi-square and Mann–Whitney analyses identify candidate relationships with `no_show`. | Retain the engineered features as candidate model inputs and assess them through the modelling workflow. |
@@ -232,7 +226,7 @@ Moreover, we plot the precision-recall curve to visualise the tradeoff between P
   <img src="notebooks/images/precision_recall_curve.png" alt="Precision-recall curve" width="450"/>
 </p>
 
-Lastly, we plot the calibration curve to assess whether the predicted no-show probabilities align with the actual observed no-show rates. This is important because well-calibrated probabilities enable reliable estimation of operational quantities such as expected no-shows, expected show-ups, under-occupancy risk, over-occupancy risk, and the potential value of targeted interventions such as reminders. These estimates can then inform hotel operations management decisions, including staffing, inventory management, booking reminders, deposit policies, and overbooking limits, supporting business objectives such as reducing operational inefficiencies, improving resource allocation and protecting revenue.
+Lastly, we plot the calibration curve to assess whether the predicted no-show probabilities align with the actual observed no-show rates. This is important because well-calibrated probabilities enable reliable estimation of operational quantities such as expected no-shows, expected show-ups, under-occupancy risk, over-occupancy risk, and the potential value of targeted interventions. These estimates can then inform hotel operations management decisions, including staffing, inventory management, deposit policies, and overbooking limits, supporting business objectives such as reducing operational inefficiencies, improving resource allocation and protecting revenue.
 
 <p align="center">
   <img src="notebooks/images/calibration_curve.png" alt="Calibration curve" width="450"/>
