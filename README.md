@@ -1,5 +1,7 @@
 # Hotel no-show prediction pipeline
 
+**Explore the projects:** [AI-Enabled Task Chatbot](https://github.com/weifengsiew/ai-enabled-task-chatbot) · [Kedro pipeline visualisation](https://weifengsiew.github.io/machine-learning-pipeline-hotel-no-shows/?types=nodes&expandAllPipelines=false&pid=__default__)
+
 <p align="center">
   <img src="notebooks/images/final_results_header.png" alt="Hotel no-show prediction report visual" width="900">
 </p>
@@ -239,8 +241,8 @@ See [`notebooks/final_results.ipynb`](notebooks/final_results.ipynb) for the ful
 ### Clone the repository
 
 ```bash
-git clone https://github.com/weifengsiew/Machine-Learning-Pipeline-Hotel-No-Shows.git
-cd Machine-Learning-Pipeline-Hotel-No-Shows
+git clone https://github.com/weifengsiew/machine-learning-pipeline-hotel.git
+cd machine-learning-pipeline-hotel
 ```
 
 ### Environment setup
