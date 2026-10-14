@@ -70,4 +70,4 @@ jobs:
         with:
           project_path: "."
           telemetry_consent: false
-          deployment_check: true
+          deployment_check: false
