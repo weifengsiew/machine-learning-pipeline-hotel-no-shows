@@ -7,7 +7,7 @@ cd "$PROJECT_ROOT"
 
 KEDRO="${KEDRO:-$PROJECT_ROOT/.venv/bin/kedro}"
 export KEDRO_DISABLE_TELEMETRY="${KEDRO_DISABLE_TELEMETRY:-1}"
-export KEDRO_LOGGING_CONFIG="${KEDRO_LOGGING_CONFIG:-$PROJECT_ROOT/conf/logging.yml}"
+export KEDRO_LOGGING_CONFIG="${KEDRO_LOGGING_CONFIG:-$PROJECT_ROOT/conf/base/logging.yml}"
 export MPLCONFIGDIR="${MPLCONFIGDIR:-/private/tmp/kedro-mplconfig}"
 mkdir -p "$MPLCONFIGDIR" "$PROJECT_ROOT/logs"
 

@@ -13,6 +13,7 @@ xgboost==3.3.0
 matplotlib==3.10.0
 seaborn==0.13.2
 jupyter==1.1.1
+argon2-cffi-bindings==25.1.0
 PyYAML==6.0.3
 joblib==1.5.3
 ydata-profiling==4.18.4

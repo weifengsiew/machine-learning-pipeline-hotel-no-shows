@@ -17,7 +17,7 @@ This gate runs immediately after SQLite ingestion and before `data_cleaning`:
 
 ## Logging configuration
 
-Use Kedro’s project logging configuration at `conf/logging.yml`. Set the root logger to `DEBUG`; handler levels are thresholds, so higher severity records appear in each applicable file.
+Use Kedro’s project logging configuration at `conf/base/logging.yml`. Set the root logger to `DEBUG`; handler levels are thresholds, so higher severity records appear in each applicable file.
 
 | Destination | Minimum level | File contents |
 | --- | --- | --- |
