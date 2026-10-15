@@ -1,8 +1,8 @@
-raw_validation_results:
+raw2_validation_results:
   type: json.JSONDataset
   filepath: results/validation/noshow_validation_results.json
 
-raw_validation_failures:
+raw2_validation_failures:
   type: pandas.CSVDataset
   filepath: results/validation/noshow_validation_failures.csv
 

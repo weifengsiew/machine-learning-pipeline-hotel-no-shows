@@ -1,20 +1,44 @@
-expectation_suite:
+cleaned_expectation_suite:
   type: MemoryDataset
   copy_mode: assign
 
-raw_validation_context:
+raw1_expectation_suite:
   type: MemoryDataset
   copy_mode: assign
 
-raw_validation_context_with_batch:
+raw2_expectation_suite:
   type: MemoryDataset
   copy_mode: assign
 
-raw_validation_batch_request:
+raw2_validation_context:
   type: MemoryDataset
   copy_mode: assign
 
-raw_validator:
+raw2_validation_context_with_batch:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw2_validation_batch_request:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw2_validator:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw1_validation_context:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw1_validation_context_with_batch:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw1_validation_batch_request:
+  type: MemoryDataset
+  copy_mode: assign
+
+raw1_validator:
   type: MemoryDataset
   copy_mode: assign
 

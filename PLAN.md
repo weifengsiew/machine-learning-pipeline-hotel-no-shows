@@ -23,19 +23,7 @@ The repository already ignores `logs/`.
 
 ### Raw data gate plan
 
-- Preserve the downloaded or reused source file unchanged for traceability.
-- Before cleaning, verify that the source file can be read, the configured
-  SQLite table exists, the table has rows, and the column names are unique.
-- Validate the raw schema against required column names and explicitly
-  approved optional columns. Compare names rather than relying on column count
-  or order, and allow only raw value formats that the cleaning process is
-  designed to handle.
-- Record the source checksum/version and a schema summary. Report schema
-  differences at DEBUG without logging booking-level rows.
-- If the file, table, or required schema is invalid, retain the source and
-  validation report for review and stop before cleaning.
-- Make successful raw validation a required dependency of the cleaning nodes
-  so cleaning cannot run on an unapproved source schema.
+- See [raw-data-validation.md](raw-data-validation.md) for the raw data gate requirements and column checks.
 
 ### Cleaned data gate plan
 
