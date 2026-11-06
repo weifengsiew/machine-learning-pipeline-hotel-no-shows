@@ -1,6 +1,10 @@
 # macOS
 .DS_Store
 
+# Local planning and validation notes
+/PLAN.md
+/raw-data-gate.md
+
 # Python caches and build outputs
 __pycache__/
 *.py[cod]

@@ -4,9 +4,7 @@ from __future__ import annotations
 
 from kedro.pipeline import Pipeline, node
 
-from hotel_no_show_prediction.pipelines.data_ingestion.nodes import (
-    load_raw_noshow,
-)
+from hotel_no_show_prediction.pipelines.data_ingestion.nodes import load_raw_noshow
 
 
 def create_pipeline(**kwargs) -> Pipeline:

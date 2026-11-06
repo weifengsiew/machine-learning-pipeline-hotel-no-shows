@@ -8,19 +8,19 @@ import great_expectations as gx
 import pandas as pd
 from great_expectations import ExpectationSuite
 
-from hotel_no_show_prediction.pipelines.data_validation.expectations import (
+from hotel_no_show_prediction.pipelines.cleaned_data_validation.expectations import (
     add_basic_expectations as add_basic_expectations_to_suite,
 )
-from hotel_no_show_prediction.pipelines.data_validation.expectations import (
+from hotel_no_show_prediction.pipelines.cleaned_data_validation.expectations import (
     add_numeric_range_expectations as add_numeric_range_expectations_to_suite,
 )
-from hotel_no_show_prediction.pipelines.data_validation.expectations import (
+from hotel_no_show_prediction.pipelines.cleaned_data_validation.expectations import (
     add_string_expectations as add_string_expectations_to_suite,
 )
-from hotel_no_show_prediction.pipelines.data_validation.expectations import (
+from hotel_no_show_prediction.pipelines.cleaned_data_validation.expectations import (
     add_type_expectations as add_type_expectations_to_suite,
 )
-from hotel_no_show_prediction.pipelines.data_validation.reporting import (
+from hotel_no_show_prediction.pipelines.cleaned_data_validation.reporting import (
     extract_failed_expectations,
     format_failed_expectations_report,
 )

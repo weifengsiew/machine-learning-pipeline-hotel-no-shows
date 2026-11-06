@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import calendar
+import logging
+from collections.abc import Callable
 
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 TARGET_COLUMN = "no_show"
 MISSING_DROP_THRESHOLD = 0.05
@@ -23,6 +27,15 @@ NUMERIC_COLUMN_TYPES = {
     "num_adults": "Int64",
     "num_children": "Int64",
 }
+
+
+def run_cleaning_step(frame: pd.DataFrame, *, step: Callable) -> pd.DataFrame:
+    """Run one cleaning function and log failures at its pipeline boundary."""
+    try:
+        return step(frame)
+    except Exception:
+        logger.exception("Cleaning step %s failed; stopping the pipeline", step.__name__)
+        raise
 
 
 def drop_duplicate_rows(noshow: pd.DataFrame) -> pd.DataFrame:
