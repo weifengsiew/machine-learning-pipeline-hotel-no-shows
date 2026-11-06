@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from functools import partial
-
 from kedro.pipeline import Pipeline, node
 
 from hotel_no_show_prediction.pipelines.data_cleaning.nodes import (
@@ -14,7 +12,6 @@ from hotel_no_show_prediction.pipelines.data_cleaning.nodes import (
     num_adults_words_to_numbers,
     set_invalid_day_of_month_to_missing,
     standardize_month_columns,
-    run_cleaning_step,
 )
 
 
@@ -23,43 +20,43 @@ def create_pipeline(**kwargs) -> Pipeline:
     return Pipeline(
         [
             node(
-                func=partial(run_cleaning_step, step=drop_duplicate_rows),
-                inputs="raw_noshow_validated",
+                func=drop_duplicate_rows,
+                inputs="raw_noshow",
                 outputs="noshow_deduplicated",
                 name="drop_duplicate_rows",
             ),
             node(
-                func=partial(run_cleaning_step, step=drop_missing_target_rows),
+                func=drop_missing_target_rows,
                 inputs="noshow_deduplicated",
                 outputs="noshow_target_available",
                 name="drop_missing_target_rows",
             ),
             node(
-                func=partial(run_cleaning_step, step=drop_rows_with_low_missingness),
+                func=drop_rows_with_low_missingness,
                 inputs="noshow_target_available",
                 outputs="noshow_low_missingness_rows_dropped",
                 name="drop_rows_with_low_missingness",
             ),
             node(
-                func=partial(run_cleaning_step, step=num_adults_words_to_numbers),
+                func=num_adults_words_to_numbers,
                 inputs="noshow_low_missingness_rows_dropped",
                 outputs="noshow_num_adults_standardized",
                 name="num_adults_words_to_numbers",
             ),
             node(
-                func=partial(run_cleaning_step, step=convert_numeric_column_types),
+                func=convert_numeric_column_types,
                 inputs="noshow_num_adults_standardized",
                 outputs="noshow_numeric_types_converted",
                 name="convert_numeric_column_types",
             ),
             node(
-                func=partial(run_cleaning_step, step=standardize_month_columns),
+                func=standardize_month_columns,
                 inputs="noshow_numeric_types_converted",
                 outputs="noshow_month_standardized",
                 name="standardize_month_columns",
             ),
             node(
-                func=partial(run_cleaning_step, step=set_invalid_day_of_month_to_missing),
+                func=set_invalid_day_of_month_to_missing,
                 inputs="noshow_month_standardized",
                 outputs="noshow_cleaned",
                 name="set_invalid_day_of_month_to_missing",

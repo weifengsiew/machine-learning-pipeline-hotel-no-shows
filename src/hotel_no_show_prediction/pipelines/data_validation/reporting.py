@@ -54,10 +54,8 @@ def format_examples(examples: list[Any]) -> str:
     Returns:
         str: Unique example values joined into one semicolon-separated string.
     """
-    unique_examples = pd.Series(
-        [str(example) for example in examples], dtype="string"
-    ).drop_duplicates().head(30)
-    return "; ".join(unique_examples)
+    unique_examples = pd.Series(examples, dtype="object").drop_duplicates().head(30)
+    return "; ".join(unique_examples.astype(str))
 
 
 def extract_failed_expectations(validation_results: dict[str, Any]) -> list[dict[str, Any]]:

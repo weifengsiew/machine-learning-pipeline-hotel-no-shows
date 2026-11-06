@@ -2,28 +2,26 @@
 
 from __future__ import annotations
 
-import logging
-import sqlite3
 from pathlib import Path
+import sqlite3
 
 import pandas as pd
 
-logger = logging.getLogger(__name__)
-
 
 def load_raw_noshow(raw_data_config: dict[str, str]) -> pd.DataFrame:
-    """Load no-show data from a SQLite table."""
-    try:
-        database_path = Path(raw_data_config["path"])
-        table_name = raw_data_config["table_name"]
-        if not database_path.is_file():
-            raise FileNotFoundError(f"SQLite database does not exist: {database_path}")
+    """Load no-show data from a SQLite table.
 
-        with sqlite3.connect(database_path) as connection:
-            return pd.read_sql_query(
-                f'SELECT * FROM "{table_name}"',
-                connection,
-            )
-    except Exception:
-        logger.exception("Failed to load raw data from SQLite")
-        raise
+    Args:
+        raw_data_config (dict[str, str]): Config containing the SQLite database path and table name.
+
+    Returns:
+        pd.DataFrame: Loaded no-show data.
+    """
+    database_path = Path(raw_data_config["path"])
+    table_name = raw_data_config["table_name"]
+
+    with sqlite3.connect(database_path) as connection:
+        return pd.read_sql_query(
+            f'SELECT * FROM "{table_name}"',
+            connection,
+        )

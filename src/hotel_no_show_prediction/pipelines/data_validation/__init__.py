@@ -1,4 +1,4 @@
-"""Raw data validation pipeline."""
+"""Data validation pipeline."""
 
 from .pipeline import create_pipeline
 
